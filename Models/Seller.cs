@@ -9,18 +9,27 @@ namespace SalesWebMvc.Models
     public class Seller
     {
         public int Id { get; set; }
+
+        [Required(ErrorMessage = "{0}Name required")] //o "{0}" pega o nome do atributo, nesse caso o "Name"
+        [StringLength(60, MinimumLength = 3, ErrorMessage = "{0}Name must be btween 3 and 60 char")]
         public string Name { get; set; }
 
+        [Required(ErrorMessage = "{0}Name required")]
+        [EmailAddress(ErrorMessage = "Enter a valid email")]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
+        [Required(ErrorMessage = "{0}Name required")]
         [Display(Name= "Birth Date")]
         [DataType(DataType.Date)]
         public DateTime BirthDate { get; set; }
 
+        [Required(ErrorMessage = "{0}Name required")]
+        [Range(100.0, 500000.0, ErrorMessage = "{0} must be from {1} and {2}")]
         [Display(Name = "Base Salary")]
         [DisplayFormat(DataFormatString ="{0:F2}")]
         public double BaseSalary { get; set; }
+
         public Department Department { get; set; }
         public int DepartmentId { get; set; }
         public ICollection<SalesRecord> Sales { get; set; } = new List<SalesRecord>();
