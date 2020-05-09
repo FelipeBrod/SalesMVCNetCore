@@ -33,12 +33,21 @@ namespace SalesWebMvc.Services
         {
             return await _context.Seller.Include(obj=>obj.Department).FirstOrDefaultAsync(obj => obj.Id == id);
         }
-        public async Task RemoveAsync(int id)
+        public async Task RemoveAsync(int id) //caso o seller tenha alguma venda registrada a ele, 
+                                              //necessario saber pra onde essas vendas "vão", 
+                                              //toda venda precisa de um vendedor
         {
-            var obj = await _context.Seller.FindAsync(id);
-            _context.Seller.Remove(obj);
-            await _context.SaveChangesAsync();
-           
+            try
+            {
+                var obj = await _context.Seller.FindAsync(id);
+                _context.Seller.Remove(obj);
+                await _context.SaveChangesAsync();
+            }
+
+            catch (DbUpdateException e)
+            {
+                throw new IntegrityException("It is not possible to delete this seller because it has sales attached to it ");
+            }
         }
         public async Task UpdateAsync(Seller obj)
         {
