@@ -36,6 +36,22 @@ namespace SalesWebMvc.Controllers
             var result = await _salesRecordService.FindByDateAsync(minDate, maxDate);
             return View(result); //manda lista como resultado da acao
 
+        } public async Task<IActionResult> GroupingSearch(DateTime? minDate, DateTime? maxDate)
+        {
+            if (!minDate.HasValue)
+            {
+                minDate = new DateTime(DateTime.Now.Year, 1, 1); //recebe como padrão a data
+            }
+            if (!maxDate.HasValue)
+            {
+                maxDate = DateTime.Now; //recebe como padrão a data
+            }
+
+            ViewData["minDate"] = minDate.Value.ToString("yyyy-MM-dd"); //para que as datas pesquisadas fiquem registras nas box, simples UI
+            ViewData["maxDate"] = maxDate.Value.ToString("yyyy-MM-dd");
+            var result = await _salesRecordService.FindByDateGroupingAsync(minDate, maxDate);
+            return View(result); //manda lista como resultado da acao
+
         } 
         public IActionResult GroupingSearch()
         {
